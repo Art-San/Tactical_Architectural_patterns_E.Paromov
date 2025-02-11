@@ -1,143 +1,143 @@
-import js from "@eslint/js";
-import globals from "globals";
-import reactHooks from "eslint-plugin-react-hooks";
-import reactRefresh from "eslint-plugin-react-refresh";
-import tseslint from "typescript-eslint";
-import boundaries from "eslint-plugin-boundaries";
+import js from '@eslint/js'
+import globals from 'globals'
+import reactHooks from 'eslint-plugin-react-hooks'
+import reactRefresh from 'eslint-plugin-react-refresh'
+import tseslint from 'typescript-eslint'
+import boundaries from 'eslint-plugin-boundaries'
 
 export default tseslint.config(
-  { ignores: ["dist"] },
+  { ignores: ['dist'] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
-    files: ["**/*.{ts,tsx}"],
+    files: ['**/*.{ts,tsx}'],
     languageOptions: {
       ecmaVersion: 2020,
-      globals: globals.browser,
+      globals: globals.browser
     },
     plugins: {
-      "react-hooks": reactHooks,
-      "react-refresh": reactRefresh,
+      'react-hooks': reactHooks,
+      'react-refresh': reactRefresh
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
-      "react-refresh/only-export-components": [
-        "warn",
-        { allowConstantExport: true },
-      ],
-    },
+      'react-refresh/only-export-components': [
+        'warn',
+        { allowConstantExport: true }
+      ]
+    }
   },
   {
     plugins: { boundaries },
     settings: {
-      "boundaries/elements": [
+      'boundaries/elements': [
         {
-          type: "app",
-          pattern: "app",
+          type: 'app',
+          pattern: 'app'
         },
         {
-          type: "pages",
-          pattern: "pages/*",
-          capture: ["page"],
+          type: 'pages',
+          pattern: 'pages/*',
+          capture: ['page']
         },
         {
-          type: "features",
-          pattern: "features/*",
-          capture: ["feature"],
+          type: 'features',
+          pattern: 'features/*',
+          capture: ['feature']
         },
         {
-          type: "services",
-          pattern: "services/*",
-          capture: ["service"],
+          type: 'services',
+          pattern: 'services/*',
+          capture: ['service']
         },
         {
-          type: "kernel",
-          pattern: "kernel/*",
+          type: 'kernel',
+          pattern: 'kernel/*'
         },
         {
-          type: "shared",
-          pattern: "shared/*",
-        },
+          type: 'shared',
+          pattern: 'shared/*'
+        }
       ],
-      "import/resolver": {
+      'import/resolver': {
         typescript: {
-          alwaysTryTypes: true,
-        },
-      },
+          alwaysTryTypes: true
+        }
+      }
     },
     rules: {
-      "boundaries/entry-point": [
+      'boundaries/entry-point': [
         2,
         {
-          default: "disallow",
+          default: 'disallow',
           rules: [
             {
-              target: ["pages", "features", "services"],
-              allow: "index.ts",
+              target: ['pages', 'features', 'services'],
+              allow: ['index.ts', 'index.ts']
             },
             {
-              target: ["kernel", "app"],
-              allow: "*",
+              target: ['kernel', 'app'],
+              allow: '*'
             },
             {
-              target: ["shared"],
-              allow: ["*", "*/index.ts"],
-            },
-          ],
-        },
+              target: ['shared'],
+              allow: ['*', '*/index.ts']
+            }
+          ]
+        }
       ],
-      "boundaries/element-types": [
+      'boundaries/element-types': [
         2,
         {
           // disallow importing any element by default
-          default: "allow",
+          default: 'allow',
           rules: [
             {
-              from: ["pages"],
-              disallow: ["app"],
+              from: ['pages'],
+              disallow: ['app']
             },
             {
-              from: "features",
-              disallow: ["app", "pages"],
+              from: 'features',
+              disallow: ['app', 'pages']
             },
             {
-              from: ["services"],
-              disallow: ["app", "pages", "features"],
+              from: ['services'],
+              disallow: ['app', 'pages', 'features']
             },
             {
-              from: ["kernel"],
-              disallow: ["app", "pages", "features", "services"],
+              from: ['kernel'],
+              disallow: ['app', 'pages', 'features', 'services']
             },
             {
-              from: ["shared"],
-              disallow: ["app", "pages", "features", "kernel", "services"],
+              from: ['shared'],
+              disallow: ['app', 'pages', 'features', 'kernel', 'services']
             },
             {
-              from: ["pages"],
-              message: "Module must not import other module",
+              from: ['pages'],
+              message: 'Module must not import other module',
               disallow: [
                 [
-                  "pages",
+                  'pages',
                   {
-                    module: "!${page}",
-                  },
-                ],
-              ],
+                    module: '!${page}'
+                  }
+                ]
+              ]
             },
             {
-              from: ["features"],
-              message: "Module must not import other module",
+              from: ['features'],
+              message: 'Module must not import other module',
               disallow: [
                 [
-                  "features",
+                  'features',
                   {
-                    module: "!${feature}",
-                  },
-                ],
-              ],
-            },
-          ],
-        },
-      ],
-    },
+                    module: '!${feature}'
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    }
   }
-);
+)

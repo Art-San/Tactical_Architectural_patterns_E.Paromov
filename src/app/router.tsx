@@ -1,18 +1,19 @@
-import { createBrowserRouter, redirect } from "react-router-dom";
-import { Layout } from "./components/layout";
-import { TaskListPage } from "@/pages/tasks";
-import { TracksTablePage } from "@/pages/tracks";
+import { createBrowserRouter, redirect } from 'react-router-dom'
+import { Layout } from './components/layout'
+
 import {
   AddTrackModal,
   AddTrackWithParamsModal,
-  UpdateTrackModal,
-} from "@/features/manage-track";
-import { tracksApi, TracksApiProvider } from "@/services/track";
-import { routes } from "@/kernel/routes";
+  UpdateTrackModal
+} from '@/features/manage-track'
+import { tracksApi, TracksApiProvider } from '@/services/track'
+import { routes } from '@/kernel/routes'
+import { TracksTablePage } from '@/pages/tracks'
+import { TaskListPage } from '@/pages/tasks'
 
 export const router = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: (
       <TracksApiProvider value={tracksApi}>
         <Layout />
@@ -24,16 +25,16 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        loader: () => redirect(routes.tracks),
+        loader: () => redirect(routes.tracks)
       },
       {
         path: routes.tracks,
-        element: <TracksTablePage />,
+        element: <TracksTablePage />
       },
       {
         path: routes.tasks,
-        element: <TaskListPage />,
-      },
-    ],
-  },
-]);
+        element: <TaskListPage />
+      }
+    ]
+  }
+])
