@@ -72,7 +72,7 @@ export default tseslint.config(
           rules: [
             {
               target: ['pages', 'features', 'services'],
-              allow: ['index.ts', 'index.ts']
+              allow: ['index.ts', 'index.tsx']
             },
             {
               target: ['kernel', 'app'],
