@@ -1,12 +1,13 @@
 import { useState } from 'react'
 import styles from './style.module.css'
+import { authApi } from '../model/api'
 
 interface RegisterFormData {
   username: string
   email: string
   password: string
 }
-const API_URL = 'http://localhost:3001'
+// const API_URL = 'http://localhost:3001'
 export const RegisterForm = () => {
   const [formData, setFormData] = useState<RegisterFormData>({
     email: '',
@@ -18,32 +19,7 @@ export const RegisterForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
-      // Check if user already exists
-      const checkResponse = await fetch(
-        `${API_URL}/users?email=${formData.email}`
-      )
-      const existingUsers = await checkResponse.json()
-
-      if (existingUsers.length > 0) {
-        throw new Error('User already exists')
-      }
-
-      // Create new user
-      const response = await fetch(`${API_URL}/users`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
-      })
-
-      if (!response.ok) {
-        throw new Error('Registration failed')
-      }
-
-      const newUser = await response.json()
-      localStorage.setItem('userId', newUser.id.toString())
-      window.location.reload()
+      await authApi.register(formData)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Registration failed')
     }

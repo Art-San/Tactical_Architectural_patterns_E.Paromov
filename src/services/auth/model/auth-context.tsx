@@ -6,13 +6,15 @@ import {
   useContext,
   createContext
 } from 'react'
+import { User } from './types'
+import { authApi } from './api'
 
-export interface User {
-  id: number
-  email: string
-  username: string
-  password: string
-}
+// export interface User {
+//   id: number
+//   email: string
+//   username: string
+//   password: string
+// }
 
 interface AuthContextType {
   user: User | null
@@ -23,7 +25,7 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
-const API_URL = 'http://localhost:3001'
+// const API_URL = 'http://localhost:3001'
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children
@@ -33,34 +35,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [error, setError] = useState<string | null>(null)
 
   const logout = useCallback(() => {
-    localStorage.removeItem('userId')
+    authApi.logout()
     setUser(null)
   }, [])
 
   useEffect(() => {
-    const fetchUser = async () => {
-      const userId = localStorage.getItem('userId')
-      if (!userId) {
+    authApi
+      .fetchUser()
+      .then((user) => {
+        setUser(user)
         setLoading(false)
-        return
-      }
-
-      try {
-        const response = await fetch(`${API_URL}/users/${userId}`)
-        if (!response.ok) {
-          throw new Error('User not found')
-        }
-        const data = await response.json()
-        setUser(data)
-      } catch {
-        setError('Failed to fetch user data')
-        localStorage.removeItem('userId')
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchUser()
+      })
+      .catch((err) => {
+        setError(err)
+      })
   }, [])
 
   const value = useMemo(
@@ -83,13 +71,3 @@ export const useAuth = () => {
   }
   return context
 }
-
-// export const useMe = () => {
-//   const { user, loading, error } = useAuth()
-//   return { user, loading, error }
-// }
-
-// export const useLogout = () => {
-//   const { logout } = useAuth()
-//   return logout
-// }
