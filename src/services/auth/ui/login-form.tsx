@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import styles from './style.module.css'
+import { useAuth } from '../model/use-auth'
 
 interface LoginFormData {
   email: string
   password: string
 }
-const API_URL = 'http://localhost:3001'
+
 export const LoginForm = () => {
   const [formData, setFormData] = useState<LoginFormData>({
     email: '',
@@ -13,24 +14,14 @@ export const LoginForm = () => {
   })
   const [error, setError] = useState<string>('')
 
+  const { login } = useAuth()
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
-      // First, find the user by email
-      const usersResponse = await fetch(
-        `${API_URL}/users?email=${formData.email}`
-      )
-      const users = await usersResponse.json()
-
-      if (users.length === 0 || users[0].password !== formData.password) {
-        throw new Error('Invalid credentials')
-      }
-
-      const user = users[0]
-      localStorage.setItem('userId', user.id.toString())
-      window.location.reload()
-    } catch {
-      setError('Invalid credentials')
+      await login(formData)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Login failed')
     }
   }
 

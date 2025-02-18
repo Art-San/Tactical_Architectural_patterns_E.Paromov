@@ -1,13 +1,13 @@
 import { useState } from 'react'
 import styles from './style.module.css'
-import { authApi } from '../model/api'
+import { useAuth } from '../model/use-auth'
 
 interface RegisterFormData {
   username: string
   email: string
   password: string
 }
-// const API_URL = 'http://localhost:3001'
+
 export const RegisterForm = () => {
   const [formData, setFormData] = useState<RegisterFormData>({
     email: '',
@@ -16,10 +16,12 @@ export const RegisterForm = () => {
   })
   const [error, setError] = useState<string>('')
 
+  const { register } = useAuth()
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
-      await authApi.register(formData)
+      await register(formData)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Registration failed')
     }
