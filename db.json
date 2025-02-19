@@ -117,6 +117,14 @@
       "isDone": false
     }
   ],
+  "users": [
+    {
+      "id": "0ed5",
+      "email": "admin@gmail.com",
+      "password": "123",
+      "username": "admin"
+    }
+  ],
   "taskTracking": {
     "activeTaskId": null,
     "startTime": null
