@@ -123,6 +123,12 @@
       "email": "admin@gmail.com",
       "password": "123",
       "username": "admin"
+    },
+    {
+      "id": "aaf9",
+      "email": "art@san.ru",
+      "password": "123",
+      "username": "art"
     }
   ],
   "taskTracking": {
