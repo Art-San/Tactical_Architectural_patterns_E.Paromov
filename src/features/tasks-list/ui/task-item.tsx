@@ -1,15 +1,15 @@
-import React from "react";
-import styles from "./task-item.module.css";
-import { Task } from "../hooks/use-tasks";
+import React from 'react'
+import styles from './task-item.module.css'
+import { Task } from '../model/use-tasks'
 
 interface TaskItemProps {
-  task: Task;
-  isTracking: boolean;
-  trackingStartTime: string | null;
-  canStartTracking: boolean;
-  onToggleDone: (task: Task) => void;
-  onStartTracking: (taskId: string) => void;
-  onDeleteTask: (taskId: string) => void;
+  task: Task
+  isTracking: boolean
+  trackingStartTime: string | null
+  canStartTracking: boolean
+  onToggleDone: (task: Task) => void
+  onStartTracking: (taskId: string) => void
+  onDeleteTask: (taskId: string) => void
 }
 
 export const TaskItem: React.FC<TaskItemProps> = ({
@@ -19,12 +19,12 @@ export const TaskItem: React.FC<TaskItemProps> = ({
   canStartTracking,
   onToggleDone,
   onStartTracking,
-  onDeleteTask,
+  onDeleteTask
 }) => {
   return (
     <li
-      className={`${styles.item} ${isTracking ? styles.tracking : ""} ${
-        task.isDone ? styles.done : ""
+      className={`${styles.item} ${isTracking ? styles.tracking : ''} ${
+        task.isDone ? styles.done : ''
       }`}
     >
       <div className={styles.content}>
@@ -60,5 +60,5 @@ export const TaskItem: React.FC<TaskItemProps> = ({
         </button>
       </div>
     </li>
-  );
-};
+  )
+}

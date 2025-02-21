@@ -1,20 +1,18 @@
-import styles from "./tracks-table.module.css";
-import { useScrollTo } from "@/shared/dom-api";
+import styles from './tracks-table.module.css'
+import { useScrollTo } from '@/shared/dom-api'
 
 export function TracksTableLayout({
   renderDays,
-  renderTask,
   summary,
-  tasks,
+  tasks
 }: {
   renderDays: (
     ref: React.RefObject<HTMLTableCellElement | null>
-  ) => React.ReactNode;
-  tasks: string[];
-  renderTask: (task: string) => React.ReactNode;
-  summary: React.ReactNode;
+  ) => React.ReactNode
+  tasks: React.ReactNode[]
+  summary: React.ReactNode
 }) {
-  const { containerRef, targetRef } = useScrollTo();
+  const { containerRef, targetRef } = useScrollTo()
 
   return (
     <div className={styles.tableContainer} ref={containerRef}>
@@ -27,10 +25,10 @@ export function TracksTableLayout({
           </tr>
         </thead>
         <tbody>
-          {tasks.map((task) => renderTask(task))}
+          {tasks}
           {summary}
         </tbody>
       </table>
     </div>
-  );
+  )
 }

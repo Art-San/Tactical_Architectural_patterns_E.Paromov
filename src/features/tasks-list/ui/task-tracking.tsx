@@ -1,19 +1,19 @@
-import React from "react";
-import styles from "./task-tracking.module.css";
-import { Task } from "../hooks/use-tasks";
+import React from 'react'
+import styles from './task-tracking.module.css'
+import { Task } from '../model/use-tasks'
 
 interface TaskTrackingProps {
-  currentTrackingTime: string;
-  activeTask: Task | undefined;
-  onStopTracking: () => void;
+  currentTrackingTime: string
+  activeTask: Task | undefined
+  onStopTracking: () => void
 }
 
 export const TaskTracking: React.FC<TaskTrackingProps> = ({
   currentTrackingTime,
   activeTask,
-  onStopTracking,
+  onStopTracking
 }) => {
-  if (!currentTrackingTime || !activeTask) return null;
+  if (!currentTrackingTime || !activeTask) return null
 
   return (
     <div className={styles.trackingInfo}>
@@ -28,5 +28,5 @@ export const TaskTracking: React.FC<TaskTrackingProps> = ({
         Stop
       </button>
     </div>
-  );
-};
+  )
+}

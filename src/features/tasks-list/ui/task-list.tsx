@@ -1,40 +1,40 @@
-import { useTasksFilters } from "../hooks/use-tasks-filters";
-import { useTaskTrack } from "../hooks/use-task-track";
-import { TaskListLayout } from "./task-list-layout";
-import { TaskTracking } from "./task-tracking";
-import { NewTaskForm } from "./new-task-form";
-import { TaskFilters } from "./task-filters";
-import { TaskItem } from "./task-item";
-import { useNewTask } from "../hooks/use-new-task";
-import { useTasks } from "../hooks/use-tasks";
-import { globalEventEmmiter } from "@/kernel/events";
+import { useTasksFilters } from '../model/use-tasks-filters'
+import { useTaskTrack } from '../model/use-task-track'
+import { TaskListLayout } from './task-list-layout'
+import { TaskTracking } from './task-tracking'
+import { NewTaskForm } from './new-task-form'
+import { TaskFilters } from './task-filters'
+import { TaskItem } from './task-item'
+import { useNewTask } from '../model/use-new-task'
+import { useTasks } from '../model/use-tasks'
+import { globalEventEmmiter } from '@/kernel/events'
 
 export const TaskList: React.FC = () => {
-  const { tasks, addTask, deleteTask, toggleDone } = useTasks();
+  const { tasks, addTask, deleteTask, toggleDone } = useTasks()
   const { filteredTasks, filters } = useTasksFilters({
-    tasks,
-  });
+    tasks
+  })
   const { handleAddTask, handleTaskTitleInputChange, newTaskTitle } =
-    useNewTask({ onAddTask: addTask });
+    useNewTask({ onAddTask: addTask })
 
   const {
     activeTask,
     currentTrackingTime,
     startTracking,
     stopTracking,
-    tracking,
+    tracking
   } = useTaskTrack({
     onTrack: ({ hours, task, startAt }) => {
-      globalEventEmmiter.emit("createTrackWithParams", {
+      globalEventEmmiter.emit('createTrackWithParams', {
         day: startAt.getDate(),
         selectedMonth: startAt.getMonth(),
         selectedYear: startAt.getFullYear(),
         task: task.title,
-        hours,
-      });
+        hours
+      })
     },
-    tasks,
-  });
+    tasks
+  })
 
   return (
     <TaskListLayout
@@ -71,5 +71,5 @@ export const TaskList: React.FC = () => {
         />
       ))}
     />
-  );
-};
+  )
+}

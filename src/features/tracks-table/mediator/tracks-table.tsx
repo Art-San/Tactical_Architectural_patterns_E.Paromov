@@ -1,34 +1,26 @@
-import { TracksActions } from "../components/tracks-actions";
-import { TracksCell } from "../components/tracks-cell";
-import { TracksTaskRow } from "../components/tracks-task-row";
-import { TableTrack } from "../components/table-track";
-import { TracksSummaryRow } from "../components/tracks-summary-row";
-import { TracksDayHeadCell } from "../components/tracks-day-head-cell";
-import { TracksTableLayout } from "../components/tracks-table-layout";
-import { useTracksFilter } from "../hooks/use-tracks-filter";
-import { TracksFilters } from "../components/tracks-filters";
-import { useTracksTasks } from "../hooks/use-tracks-tasks";
-import { useTableComputing } from "../hooks/use-table-comuting";
-import { globalEventEmmiter } from "@/kernel/events";
-import { UiButton } from "@/shared/ui/button";
-import { useTracks } from "@/services/track";
+import { globalEventEmmiter } from '@/kernel/events'
+import { UiButton } from '@/shared/ui/button'
+import { useTracks } from '@/services/track'
+import { computeTable } from '../domain/track'
+import { useTracksFilter } from '../model/use-tracks-filter'
+import { TableTrack } from '../ui/table-track'
+import { TracksActions } from '../ui/tracks-actions'
+import { TracksCell } from '../ui/tracks-cell'
+import { TracksDayHeadCell } from '../ui/tracks-day-head-cell'
+import { TracksFilters } from '../ui/tracks-filters'
+import { TracksSummaryRow } from '../ui/tracks-summary-row'
+import { TracksTableLayout } from '../ui/tracks-table-layout'
+import { TracksTaskRow } from '../ui/tracks-task-row'
 
 export const TracksTable = () => {
-  const { trackDelete, tracks } = useTracks();
-  const { filteredTracks, filters, setFilters, visibleDays } = useTracksFilter({
-    tracks,
-  });
+  const { trackDelete, tracks } = useTracks()
+  const { filters, setFilters } = useTracksFilter()
 
-  const { uniqueTasks } = useTracksTasks({
-    tracks: filteredTracks,
-  });
+  const table = computeTable(tracks, filters, filters.hideWeekends)
 
-  const { getDayTotal, getDayTracks, getTaskTotal, getTotal } =
-    useTableComputing({ tracks: filteredTracks });
-
-  const cellClick = globalEventEmmiter.bindEmit("createTrackWithParams");
-  const createClick = globalEventEmmiter.bindEmit("createTrack");
-  const trackClick = globalEventEmmiter.bindEmit("trackUpdate");
+  const cellClick = globalEventEmmiter.bindEmit('createTrackWithParams')
+  const createClick = globalEventEmmiter.bindEmit('createTrack')
+  const trackClick = globalEventEmmiter.bindEmit('trackUpdate')
   return (
     <>
       <TracksFilters
@@ -42,9 +34,8 @@ export const TracksTable = () => {
       />
 
       <TracksTableLayout
-        tasks={uniqueTasks}
         renderDays={(currentDayRef) =>
-          visibleDays.map((day) => (
+          table.header.days.map((day) => (
             <TracksDayHeadCell
               key={day}
               day={day}
@@ -53,25 +44,23 @@ export const TracksTable = () => {
             />
           ))
         }
-        renderTask={(task) => (
+        tasks={table.rows.map((row) => (
           <TracksTaskRow
-            key={task}
-            getTaskTotal={getTaskTotal}
-            task={task}
-            days={visibleDays.map((day) => (
+            key={row.task}
+            total={row.total}
+            task={row.task}
+            days={row.days.map((cell) => (
               <TracksCell
-                key={`${day}-${task}`}
-                day={day}
-                task={task}
-                getDayTracks={getDayTracks}
-                onCellClick={() =>
+                key={cell.day}
+                isTracks={cell.tracks.length > 0}
+                onClick={() =>
                   cellClick({
                     ...filters,
-                    day,
-                    task,
+                    day: cell.day,
+                    task: row.task
                   })
                 }
-                tracks={getDayTracks(day, task).map((track) => (
+                tracks={cell.tracks.map((track) => (
                   <TableTrack
                     key={track.id}
                     track={track}
@@ -87,15 +76,14 @@ export const TracksTable = () => {
               />
             ))}
           />
-        )}
+        ))}
         summary={
           <TracksSummaryRow
-            getMonthTotal={getTotal}
-            visibleDays={visibleDays}
-            getDayTotal={getDayTotal}
+            total={table.summary.total}
+            days={table.summary.days}
           />
         }
       />
     </>
-  );
-};
+  )
+}
