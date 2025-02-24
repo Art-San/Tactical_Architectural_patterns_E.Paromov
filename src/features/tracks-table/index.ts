@@ -1,1 +1,1 @@
-export { TracksTable } from "./mediator/tracks-table";
+export { TracksTable } from './compose/tracks-table'

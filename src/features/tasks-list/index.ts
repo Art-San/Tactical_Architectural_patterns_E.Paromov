@@ -1,1 +1,1 @@
-export { TaskList } from './ui/task-list'
+export { TaskList } from './compose/task-list'
