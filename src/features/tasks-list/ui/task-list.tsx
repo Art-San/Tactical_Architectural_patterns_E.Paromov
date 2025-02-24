@@ -1,19 +1,21 @@
 import { useTasksFilters } from '../model/use-tasks-filters'
 import { useTaskTrack } from '../model/use-task-track'
-import { TaskListLayout } from '../ui/task-list-layout'
-import { TaskTracking } from '../ui/task-tracking'
-import { NewTaskForm } from '../ui/new-task-form'
-import { TaskFilters } from '../ui/task-filters'
-import { TaskItem } from '../ui/task-item'
+import { TaskListLayout } from './task-list-layout'
+import { TaskTracking } from './task-tracking'
+import { NewTaskForm } from './new-task-form'
+import { TaskFilters } from './task-filters'
+import { TaskItem } from './task-item'
 import { useNewTask } from '../model/use-new-task'
 import { useTasks } from '../model/use-tasks'
 import { globalEventEmmiter } from '@/kernel/events'
+import { useTasksDnd } from '../model/use-tasks-dnd'
 
 export const TaskList: React.FC = () => {
-  const { tasks, addTask, deleteTask, toggleDone } = useTasks()
+  const { tasks, addTask, deleteTask, toggleDone, reorderTasks } = useTasks()
   const { filteredTasks, filters } = useTasksFilters({
     tasks
   })
+
   const { handleAddTask, handleTaskTitleInputChange, newTaskTitle } =
     useNewTask({ onAddTask: addTask })
 
@@ -34,6 +36,11 @@ export const TaskList: React.FC = () => {
       })
     },
     tasks
+  })
+
+  const getTasksDnd = useTasksDnd({
+    tasks,
+    onReorder: reorderTasks
   })
 
   return (
@@ -58,7 +65,7 @@ export const TaskList: React.FC = () => {
           />
         </>
       }
-      list={filteredTasks.reverse().map((task) => (
+      list={filteredTasks.map((task) => (
         <TaskItem
           key={task.id}
           task={task}
@@ -68,6 +75,7 @@ export const TaskList: React.FC = () => {
           onToggleDone={toggleDone}
           onStartTracking={startTracking}
           onDeleteTask={deleteTask}
+          dnd={getTasksDnd(task)}
         />
       ))}
     />

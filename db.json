@@ -96,25 +96,31 @@
     {
       "id": "1",
       "title": "Review code",
-      "isDone": true
+      "isDone": true,
+      "order": 3
     },
     {
       "id": "2",
-      "title": "Write documentation"
+      "title": "Write documentation",
+      "order": 0,
+      "isDone": false
     },
     {
       "id": "3",
-      "title": "Fix bugs"
+      "title": "Fix bugs",
+      "order": 2
     },
     {
       "id": "9cdc",
       "title": "New task",
-      "isDone": false
+      "isDone": false,
+      "order": 1
     },
     {
       "id": "42f1",
       "title": "New Task 2",
-      "isDone": false
+      "isDone": false,
+      "order": 4
     }
   ],
   "users": [

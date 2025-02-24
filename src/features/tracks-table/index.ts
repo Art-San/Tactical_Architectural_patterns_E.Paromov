@@ -1,1 +1,1 @@
-export { TracksTable } from './compose/tracks-table'
+export { TracksTable } from './ui/tracks-table'
