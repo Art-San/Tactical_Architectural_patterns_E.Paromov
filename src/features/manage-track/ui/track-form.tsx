@@ -1,29 +1,35 @@
-import { UiButton } from "@/shared/ui/button";
-import { Track } from "./types";
-import styles from "./track-form.module.css";
+import { UiButton } from '@/shared/ui/button'
+import { Track } from '@/kernel/track'
+import styles from './track-form.module.css'
 
 export function TrackForm({
   formData,
   onInputChange,
   onSubmit,
   onCancel,
-  submitText = "Add Track",
-  disabled = {},
+  submitText = 'Add Track',
+  disabled = {}
 }: {
-  formData: Omit<Track, "id">;
-  onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
-  onCancel: () => void;
-  submitText?: string;
+  formData: Omit<Track, 'id'>
+  onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void
+  onCancel: () => void
+  submitText?: string
   disabled?: {
-    name?: boolean;
-    task?: boolean;
-    hours?: boolean;
-    date?: boolean;
-  };
+    name?: boolean
+    task?: boolean
+    hours?: boolean
+    date?: boolean
+  }
 }) {
   return (
-    <form onSubmit={onSubmit} className={styles.form}>
+    <form
+      onSubmit={(e) => {
+        e.preventDefault()
+        onSubmit(e)
+      }}
+      className={styles.form}
+    >
       <div className={styles.formGroup}>
         <label htmlFor="name">Name:</label>
         <input
@@ -87,11 +93,11 @@ export function TrackForm({
           color="secondary"
           className={styles.button}
           onClick={() => onCancel()}
-          style={{ backgroundColor: "#6c757d" }}
+          style={{ backgroundColor: '#6c757d' }}
         >
           Cancel
         </UiButton>
       </div>
     </form>
-  );
+  )
 }

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Task } from './use-tasks'
+import { Task } from '../domain/task'
 
 export function useTasksFilters({ tasks }: { tasks: Task[] }) {
   const [filterStatus, setFilterStatus] = useState<'all' | 'done' | 'active'>(

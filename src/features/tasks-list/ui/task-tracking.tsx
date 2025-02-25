@@ -1,6 +1,6 @@
 import React from 'react'
 import styles from './task-tracking.module.css'
-import { Task } from '../model/use-tasks'
+import { Task } from '../domain/task'
 
 interface TaskTrackingProps {
   currentTrackingTime: string

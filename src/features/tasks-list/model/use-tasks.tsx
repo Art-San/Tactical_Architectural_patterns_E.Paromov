@@ -1,11 +1,5 @@
 import { useEffect, useState } from 'react'
-
-export interface Task {
-  id: string
-  title: string
-  isDone: boolean
-  order: number
-}
+import { Task } from '../domain/task'
 
 export function useTasks() {
   const [tasks, setTasks] = useState<Task[]>([])

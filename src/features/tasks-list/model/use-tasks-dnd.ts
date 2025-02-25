@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react'
-import { Task } from './use-tasks'
+import { Task } from '../domain/task'
 
 interface UseTasksDndProps {
   tasks: Task[]

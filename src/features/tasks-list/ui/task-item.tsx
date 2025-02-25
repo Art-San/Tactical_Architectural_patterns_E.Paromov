@@ -1,6 +1,6 @@
 import React from 'react'
 import styles from './task-item.module.css'
-import { Task } from '../model/use-tasks'
+import { Task } from '../domain/task'
 
 interface DragAndDropProps {
   state?: 'dragging' | 'dragover'
