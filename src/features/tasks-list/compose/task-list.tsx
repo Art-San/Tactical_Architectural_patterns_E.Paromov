@@ -5,19 +5,15 @@ import { TaskTracking } from '../ui/task-tracking'
 import { NewTaskForm } from '../ui/new-task-form'
 import { TaskFilters } from '../ui/task-filters'
 import { TaskItem } from '../ui/task-item'
-import { useNewTask } from '../model/use-new-task'
 import { useTasks } from '../model/use-tasks'
 import { globalEventEmmiter } from '@/kernel/events'
-import { useTasksDnd } from '../model/use-tasks-dnd'
+import { useTasksDnd } from '../view-model/use-tasks-dnd'
 
 export const TaskList: React.FC = () => {
   const { tasks, addTask, deleteTask, toggleDone, reorderTasks } = useTasks()
   const { filteredTasks, filters } = useTasksFilters({
     tasks
   })
-
-  const { handleAddTask, handleTaskTitleInputChange, newTaskTitle } =
-    useNewTask({ onAddTask: addTask })
 
   const {
     activeTask,
@@ -53,11 +49,7 @@ export const TaskList: React.FC = () => {
             onStopTracking={stopTracking}
           />
 
-          <NewTaskForm
-            newTaskTitle={newTaskTitle}
-            onSubmit={handleAddTask}
-            onChange={handleTaskTitleInputChange}
-          />
+          <NewTaskForm onNewTask={addTask} />
 
           <TaskFilters
             filterStatus={filters.filterStatus}

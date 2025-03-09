@@ -1,23 +1,25 @@
-import React from 'react';
-import styles from './new-task-form.module.css';
+import React from 'react'
+import styles from './new-task-form.module.css'
 
 interface NewTaskFormProps {
-  newTaskTitle: string;
-  onSubmit: (e: React.FormEvent) => void;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onNewTask: (name: string) => Promise<void>
 }
 
-export const NewTaskForm: React.FC<NewTaskFormProps> = ({
-  newTaskTitle,
-  onSubmit,
-  onChange,
-}) => {
+export const NewTaskForm: React.FC<NewTaskFormProps> = ({ onNewTask }) => {
+  const handleAddTask = async (e: React.FormEvent) => {
+    e.preventDefault()
+    const formData = new FormData(e.currentTarget as HTMLFormElement)
+    const name = formData.get('name') as string
+    if (!name.trim()) return
+
+    onNewTask(name)
+  }
+
   return (
-    <form className={styles.inputContainer} onSubmit={onSubmit}>
+    <form className={styles.inputContainer} onSubmit={handleAddTask}>
       <input
         type="text"
-        value={newTaskTitle}
-        onChange={onChange}
+        name="name"
         placeholder="Enter new task"
         className={styles.input}
       />
@@ -25,5 +27,35 @@ export const NewTaskForm: React.FC<NewTaskFormProps> = ({
         Add Task
       </button>
     </form>
-  );
-};
+  )
+}
+
+// import React from 'react'
+// import styles from './new-task-form.module.css'
+
+// interface NewTaskFormProps {
+//   newTaskTitle: string
+//   onSubmit: (e: React.FormEvent) => void
+//   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+// }
+
+// export const NewTaskForm: React.FC<NewTaskFormProps> = ({
+//   newTaskTitle,
+//   onSubmit,
+//   onChange
+// }) => {
+//   return (
+//     <form className={styles.inputContainer} onSubmit={onSubmit}>
+//       <input
+//         type="text"
+//         value={newTaskTitle}
+//         onChange={onChange}
+//         placeholder="Enter new task"
+//         className={styles.input}
+//       />
+//       <button type="submit" className={styles.addButton}>
+//         Add Task
+//       </button>
+//     </form>
+//   )
+// }
