@@ -1,10 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Task } from '../domain/task'
+import { taskTrackingApi, TaskTrackingDto } from '../lib/api'
 
-interface TaskTracking {
-  activeTaskId: string | null
-  startTime: string | null
-}
 export function useTaskTrack({
   onTrack,
   tasks
@@ -12,13 +9,21 @@ export function useTaskTrack({
   tasks: Task[]
   onTrack: (selectedCell: { hours: number; task: Task; startAt: Date }) => void
 }) {
-  const [tracking, setTracking] = useState<TaskTracking>({
+  const [tracking, setTracking] = useState<TaskTrackingDto>({
     activeTaskId: null,
     startTime: null
   })
   const [currentTrackingTime, setCurrentTrackingTime] = useState<string>('')
 
   useEffect(() => {
+    const fetchTracking = async () => {
+      try {
+        const data = await taskTrackingApi.fetchTracking()
+        setTracking(data)
+      } catch (error) {
+        console.error('Error fetching tracking:', error)
+      }
+    }
     fetchTracking()
   }, [])
 
@@ -46,32 +51,13 @@ export function useTaskTrack({
     }
   }, [tracking.startTime])
 
-  const fetchTracking = async () => {
-    try {
-      const response = await fetch('http://localhost:3001/taskTracking')
-      const data = await response.json()
-      setTracking(data)
-    } catch (error) {
-      console.error('Error fetching tracking:', error)
-    }
-  }
-
   const startTracking = async (taskId: string) => {
     try {
-      const newTracking: TaskTracking = {
+      const newTracking: TaskTrackingDto = {
         activeTaskId: taskId,
         startTime: new Date().toISOString()
       }
-
-      const response = await fetch('http://localhost:3001/taskTracking', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(newTracking)
-      })
-
-      const data = await response.json()
+      const data = await taskTrackingApi.updateTracking(newTracking)
       setTracking(data)
     } catch (error) {
       console.error('Error updating tracking:', error)
@@ -91,28 +77,15 @@ export function useTaskTrack({
         )
 
         if (activeTask) {
-          onTrack({
-            hours,
-            task: activeTask,
-            startAt: startTime
-          })
+          onTrack({ hours, task: activeTask, startAt: startTime })
         }
       }
 
-      const newTracking: TaskTracking = {
+      const newTracking: TaskTrackingDto = {
         activeTaskId: null,
         startTime: null
       }
-
-      const response = await fetch('http://localhost:3001/taskTracking', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(newTracking)
-      })
-
-      const data = await response.json()
+      const data = await taskTrackingApi.updateTracking(newTracking)
       setTracking(data)
     } catch (error) {
       console.error('Error stopping tracking:', error)
@@ -128,3 +101,134 @@ export function useTaskTrack({
     currentTrackingTime
   }
 }
+
+// import { useEffect, useState } from 'react'
+// import { Task } from '../domain/task'
+
+// interface TaskTracking {
+//   activeTaskId: string | null
+//   startTime: string | null
+// }
+// export function useTaskTrack({
+//   onTrack,
+//   tasks
+// }: {
+//   tasks: Task[]
+//   onTrack: (selectedCell: { hours: number; task: Task; startAt: Date }) => void
+// }) {
+//   const [tracking, setTracking] = useState<TaskTracking>({
+//     activeTaskId: null,
+//     startTime: null
+//   })
+//   const [currentTrackingTime, setCurrentTrackingTime] = useState<string>('')
+
+//   useEffect(() => {
+//     fetchTracking()
+//   }, [])
+
+//   useEffect(() => {
+//     if (tracking.startTime) {
+//       const timer = setInterval(() => {
+//         const startTime = new Date(tracking.startTime!).getTime()
+//         const currentTime = new Date().getTime()
+//         const diff = currentTime - startTime
+
+//         const hours = Math.floor(diff / (1000 * 60 * 60))
+//         const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
+//         const seconds = Math.floor((diff % (1000 * 60)) / 1000)
+
+//         setCurrentTrackingTime(
+//           `${hours.toString().padStart(2, '0')}:${minutes
+//             .toString()
+//             .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
+//         )
+//       }, 1000)
+
+//       return () => clearInterval(timer)
+//     } else {
+//       setCurrentTrackingTime('')
+//     }
+//   }, [tracking.startTime])
+
+//   const fetchTracking = async () => {
+//     try {
+//       const response = await fetch('http://localhost:3001/taskTracking')
+//       const data = await response.json()
+//       setTracking(data)
+//     } catch (error) {
+//       console.error('Error fetching tracking:', error)
+//     }
+//   }
+
+//   const startTracking = async (taskId: string) => {
+//     try {
+//       const newTracking: TaskTracking = {
+//         activeTaskId: taskId,
+//         startTime: new Date().toISOString()
+//       }
+
+//       const response = await fetch('http://localhost:3001/taskTracking', {
+//         method: 'PUT',
+//         headers: {
+//           'Content-Type': 'application/json'
+//         },
+//         body: JSON.stringify(newTracking)
+//       })
+
+//       const data = await response.json()
+//       setTracking(data)
+//     } catch (error) {
+//       console.error('Error updating tracking:', error)
+//     }
+//   }
+
+//   const stopTracking = async () => {
+//     try {
+//       if (tracking.activeTaskId && tracking.startTime) {
+//         const startTime = new Date(tracking.startTime)
+//         const endTime = new Date()
+//         const hours =
+//           (endTime.getTime() - startTime.getTime()) / (1000 * 60 * 60)
+
+//         const activeTask = tasks.find(
+//           (task) => task.id === tracking.activeTaskId
+//         )
+
+//         if (activeTask) {
+//           onTrack({
+//             hours,
+//             task: activeTask,
+//             startAt: startTime
+//           })
+//         }
+//       }
+
+//       const newTracking: TaskTracking = {
+//         activeTaskId: null,
+//         startTime: null
+//       }
+
+//       const response = await fetch('http://localhost:3001/taskTracking', {
+//         method: 'PUT',
+//         headers: {
+//           'Content-Type': 'application/json'
+//         },
+//         body: JSON.stringify(newTracking)
+//       })
+
+//       const data = await response.json()
+//       setTracking(data)
+//     } catch (error) {
+//       console.error('Error stopping tracking:', error)
+//     }
+//   }
+
+//   const activeTask = tasks.find((task) => task.id === tracking.activeTaskId)
+//   return {
+//     activeTask,
+//     tracking,
+//     startTracking,
+//     stopTracking,
+//     currentTrackingTime
+//   }
+// }

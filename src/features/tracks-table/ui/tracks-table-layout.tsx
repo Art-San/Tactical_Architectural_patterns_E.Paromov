@@ -1,5 +1,5 @@
 import styles from './tracks-table.module.css'
-import { useScrollTo } from '@/shared/dom-api'
+import { useScrollTo } from '@/features/tracks-table/lib/dom-api'
 
 export function TracksTableLayout({
   renderDays,

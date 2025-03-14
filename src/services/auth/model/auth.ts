@@ -36,48 +36,26 @@ export function useAuth() {
   const logout = () => {
     authApi.logout()
     userGlobalState.set(null)
-    //startTransition(() => setUser(null)) // сказал что не получится сделать startTransition
     navigation(routes.login)
   }
 
   const login = async (login: LoginPayload) => {
     const user = await authApi.login(login)
     userGlobalState.set(user)
-    // startTransition(() => setUser(user))  // сказал что не получится сделать startTransition
     navigation(routes.home)
   }
 
   const register = async (register: RegisterPayload) => {
     const user = await authApi.register(register)
     userGlobalState.set(user)
-    // startTransition(() => setUser(user))
+
     navigation(routes.home)
   }
 
-  // на 46:20 пришел к выводу что useEffect не нужен
-  // useEffect(() => {
-  //   authApi
-  //     .fetchUser()
-  //     .then((user) => {
-  //       userGlobalState.set(user)
-  //       setLoading(false)
-  //     })
-  //     .catch((err) => {
-  //       setError(err)
-  //       setLoading(false)
-  //     })
-  // }, [])
-
   return {
     user,
-    // loading,
-    // error,
     logout,
     login,
     register
   }
 }
-
-// если использую глобал стейт провайдер не нужен
-// export const { use: useAuth, Provider: AuthProvider } =
-//   createHookContext(useAuthHook)
